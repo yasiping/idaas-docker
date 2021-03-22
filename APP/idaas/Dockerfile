@@ -1,4 +1,3 @@
-ARG VERSION
 FROM docker.io/centos:7.4.1708
 
 
@@ -15,7 +14,7 @@ RUN groupadd okp && \
 #ADD tmp/package /tmp/package
 #COPY tmp/py_package/Python-3.6.5.tar.xz ${OKP_HOME}
 
-RUN yum ${YUM_FLAGS_COMMON} install epel-release && \
+RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-* && yum ${YUM_FLAGS_COMMON} install epel-release && \
     yum ${YUM_FLAGS_COMMON} install net-tools.x86_64 sysstat git supervisor gcc make zlib zlib-devel bzip2 bzip2-devel openssl mysql openssl-devel wget vim nc telnet \
         gcc-c++ \
         openssl098e
