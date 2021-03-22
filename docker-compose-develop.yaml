@@ -22,10 +22,10 @@ services:
     - "8020:8020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
-   - /capaa/:/capaa/:rw
-   - /data/log/mc-center:/data/log/mc-center/:rw
+   - ./idaas_env/mc-sender/:/capaa/:rw
+   - ./log/idaas:/data/log/mc-center/:rw
   depends_on:
-   - test-db
+   - idaas-db
   env_file:
    - .env_omp_logger
   restart: always
