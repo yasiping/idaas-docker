@@ -34,7 +34,7 @@ RUN yum ${YUM_FLAGS_COMMON} install epel-release && \
     curl ${PACKAGE_SERVER}/KingbaseES_8_ODBC_Driver_for_Linux.tar.gz | tar -zx -C /usr/local/lib64 && \
     curl ${PACKAGE_SERVER}/KingbaseES_8_ODBC_Driver_for_Linux.odbcinst | odbcinst -i -d -r && \
     curl ${PACKAGE_SERVER}/InterSystems_Cache_Python_Driver_for_Linux.tar.gz  | tar -zx -C /usr/local/lib64 && \
-    yum ${YUM_FLAGS_COMMON} localinstall /m/package/nmap-7.70-1.x86_64.rpm && \
+    yum ${YUM_FLAGS_COMMON} localinstall /tmp/package/nmap-7.70-1.x86_64.rpm && \
     chmod u+s /usr/bin/nmap && \    
     mv ${OKP_HOME}/pyenv-1.2.15 ${OKP_HOME}/.pyenv && \
     mkdir -p ${OKP_HOME}/.pyenv/plugins && \
