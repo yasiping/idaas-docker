@@ -2,7 +2,8 @@ version: '3.5'
 services:
 
  idaas-db:
-  image: mysql:5.7
+  image: idaas-db:${IDAAS_VERSION}
+  build: ./APP/idaas-db
   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
   volumes:
     - ./okp_env/var/lib/mysql:/var/lib/mysql:rw
@@ -12,18 +13,19 @@ services:
   networks:
    test_net:
     aliases:
-     - test-db
+     - idaas-db
 
  idaas:
-  image: idaas:test
+  image: idaas:${IDAAS_VERSION}
+  build: ./APP/idaas
   ports:
     - "8020:8020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
-   - /capaa/:/capaa/:rw
-   - /data/log/mc-center:/data/log/mc-center/:rw
+   - ./idaas_env/mc-sender/:/capaa/:rw
+   - ./log/idaas:/data/log/mc-center/:rw
   depends_on:
-   - test-db
+   - idaas-db
   env_file:
    - .env_omp_logger
   restart: always
