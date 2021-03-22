@@ -18,9 +18,7 @@ RUN groupadd okp && \
 RUN yum ${YUM_FLAGS_COMMON} install epel-release && \
     yum ${YUM_FLAGS_COMMON} install net-tools.x86_64 sysstat git supervisor gcc make zlib zlib-devel bzip2 bzip2-devel openssl mysql openssl-devel wget vim nc telnet \
         gcc-c++ \
-        openssl098e \
-        unixODBC \
-        unixODBC-devel && \
+        openssl098e
 #    yum ${YUM_FLAGS_COMMON} localinstall /tmp/package/nmap-7.70-1.x86_64.rpm && \
 #    chmod u+s /usr/bin/nmap
 
