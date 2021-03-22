@@ -54,7 +54,7 @@ fi
 cd /onekeeper/idaas-docker
 chmod 777 -R log/
 
-cp /backup/.env_omp_logger /onekeeper/idaas-docker/.env_omp_logger >/dev/null 2>&1
+#cp /backup/.env_omp_logger /onekeeper/idaas-docker/.env_omp_logger >/dev/null 2>&1
 docker-compose down
 docker-compose up -d
 
