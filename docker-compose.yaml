@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+
+ idaas-db:
+  image: mysql:5.7
+  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
+  volumes:
+    - ./okp_env/var/lib/mysql:/var/lib/mysql:rw
+  env_file:
+   - .env_db
+  user: root
+  networks:
+   test_net:
+    aliases:
+     - test-db
+
+ idaas:
+  image: idaas:test
+  ports:
+    - "8020:8020"
+  volumes:
+   - /etc/localtime:/etc/localtime:ro
+   - /capaa/:/capaa/:rw
+   - /data/log/mc-center:/data/log/mc-center/:rw
+  depends_on:
+   - test-db
+  env_file:
+   - .env_omp_logger
+  restart: always
+  user: root
+  networks:
+   test_net:
+    aliases:
+     - omc-idaas
+
+networks:
+  test_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
