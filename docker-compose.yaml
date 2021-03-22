@@ -7,8 +7,14 @@ services:
   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
   volumes:
     - ./okp_env/var/lib/mysql:/var/lib/mysql:rw
-  env_file:
-   - .env_db
+  environment:
+   - DB_SERVER_HOST=test-db
+   - DB_SERVER_PORT=3306
+   - MYSQL_USER=dmcp
+   - MYSQL_PASSWORD=Dmcp321!
+   - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
+   - MYSQL_ALLOW_EMPTY_PASSWORD=false
+   - MYSQL_DATABASE=mc_center
   user: root
   networks:
    test_net:
@@ -26,8 +32,6 @@ services:
    - ./log/idaas:/data/log/mc-center/:rw
   depends_on:
    - idaas-db
-  env_file:
-   - .env_omp_logger
   restart: always
   user: root
   networks:
