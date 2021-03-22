@@ -5,6 +5,7 @@ gitauth=$2
 
 process() {
 mkdir -p idaas_package
+mkdir -p py_package
 #web_pack_name=drcc-web-$version.tar.gz
 ftp -n -i 192.168.238.112 <<EOF
 
@@ -19,7 +20,7 @@ lcd ${PWD}/
 mget mc-center.tar
 
 
-cd /ftp/mc-idaas/idaas-package/py_package/
+cd /ftp/mc-idaas/idaas-package/py_package
 lcd ${PWD}/py_package
 mget *
 
