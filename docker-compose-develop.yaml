@@ -42,12 +42,12 @@ services:
 
 
 networks:
-  idaas_net:
+  drcc_net:
     driver: bridge
     driver_opts:
       com.docker.network.enable_ipv6: "false"
     ipam:
-     driver: default
-     config:
-     - subnet: 172.15.236.0/24
-       gateway: 172.15.236.1
+      driver: default
+      config:
+      - subnet: 172.15.236.0/24
+        gateway: 172.15.236.1
