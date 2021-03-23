@@ -11,6 +11,11 @@ RUN groupadd capaa && \
 
 RUN yum ${YUM_FLAGS_COMMON} install yum install java \
           java-1.8.0-openjdk-devel 1>/dev/null && \
+    yum ${YUM_FLAGS_COMMON} install net-tools.x86_64 sysstat git supervisor gcc make zlib zlib-devel bzip2 bzip2-devel openssl mysql openssl-devel wget vim nc telnet \
+        gcc-c++ \
+        openssl098e \
+        unixODBC \
+        unixODBC-devel && \
     yum ${YUM_FLAGS_COMMON} clean all && \
     rm -rf /var/cache/ldconfig/ && \
     rm -rf /var/cache/yum/ && \

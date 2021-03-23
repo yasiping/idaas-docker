@@ -107,7 +107,7 @@ prepare() {
 
 build_images() {
 
-    docker build --build-arg VERSION=$version --build-arg GITAUTH=$gitauth -t idaas-base:${version} ./APP/idaas-base
+#    docker build --build-arg VERSION=$version --build-arg GITAUTH=$gitauth -t idaas-base:${version} ./APP/idaas-base
     
     build_ok=1
     for i in 1 2 3 4 5; do
