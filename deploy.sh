@@ -38,7 +38,7 @@ fi
 
 cd ~/tmp/idaas_packages && tar -zxvf $tgzfile -C /onekeeper/
 if [ ! -n "$deploy_mode" ] || [ $deploy_mode = "ZIP" ] || [ $deploy_mode = "REGISTRY_TO_ZIP" ];then
-    docker load < /onekeeper/idaas-docker/images/okp-idaas.tar
+    docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
 elif [ $deploy_mode = "REGISTRY" ];then
     cd /onekeeper/idaas-docker
     images=$(docker-compose config | grep "^[[:space:]]*image:" | grep -v "filebeat:" | grep -v "kibana:" | sed -e "s/\s*image:\s*//g")

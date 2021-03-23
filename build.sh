@@ -156,7 +156,7 @@ pack_images() {
             done
 
             echo "images:$images"
-            docker save -o ./idaas-docker/images/okp-idaas.tar $images
+            docker save -o ./idaas-docker/images/osc-idaas.tar $images
 
         success "save images complete"
 
@@ -182,7 +182,7 @@ pack_images() {
     if [ ! -n "$deploy_mode" ] || [ $deploy_mode = "ZIP" ];then
         info "save images begin"
         echo "images:$images"
-        docker save -o ./idaas-docker/images/okp-idaas.tar $images
+        docker save -o ./idaas-docker/images/osc-idaas.tar $images
         success "save images complete"
     elif [ $deploy_mode = "REGISTRY" ];then
         info "push images begin"
