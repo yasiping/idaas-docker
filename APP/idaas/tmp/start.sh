@@ -4,8 +4,8 @@ echo "########################################################"
 
 #/wait-for-it.sh osm-db:3306 -t 0
 
-cd /capaa/mc-center-shell
-bash ./restart.sh
+cd /capaa/mc-center
+bash ./install.sh
 
 while :
 do

@@ -28,7 +28,7 @@ services:
     - "8020:8020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
-   - ./idaas_env/mc-sender/:/capaa/:rw
+   - ./idaas_env/mc-center/:/capaa/:rw
    - ./log/idaas:/data/log/mc-center/:rw
   depends_on:
    - idaas-db

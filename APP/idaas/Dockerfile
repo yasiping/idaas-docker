@@ -1,13 +1,20 @@
 ARG VERSION
 FROM idaas-base:${VERSION}
 
-RUN yum -q -y install yum install java java-1.8.0-openjdk-devel
-#           && \
-#    yum ${YUM_FLAGS_COMMON} clean all && \
-#    rm -rf /var/cache/ldconfig/ && \
-#    rm -rf /var/cache/yum/ && \
-#    rm -rf /tmp/yum* && \
-#    rm -rf /tmp/package
+ARG YUM_FLAGS_COMMON="-q -y"
+ARG CAPAA_HOME="/home/capaa"
+
+RUN groupadd capaa && \
+    useradd capaa -g capaa -G capaa && \
+    echo 'export LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8' >> ${CAPAA_HOME}/.bash_profile
+
+RUN yum ${YUM_FLAGS_COMMON} install yum install java \
+          java-1.8.0-openjdk-devel 1>/dev/null && \
+    yum ${YUM_FLAGS_COMMON} clean all && \
+    rm -rf /var/cache/ldconfig/ && \
+    rm -rf /var/cache/yum/ && \
+    rm -rf /tmp/yum* && \
+    rm -rf /tmp/package
 
 ADD tmp/datetime.txt /app/
 ADD tmp/start.sh /start.sh
