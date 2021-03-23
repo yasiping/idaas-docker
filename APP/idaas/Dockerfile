@@ -1,5 +1,6 @@
+FROM docker.io/centos:7.4.1708
+
 ARG VERSION
-FROM idaas-base:${VERSION}
 
 ARG YUM_FLAGS_COMMON="-q -y"
 ARG CAPAA_HOME="/home/capaa"
@@ -17,6 +18,7 @@ RUN yum ${YUM_FLAGS_COMMON} install yum install java \
     rm -rf /tmp/package
 
 ADD tmp/datetime.txt /app/
+ADD tmp/application.yml  /application.yml
 ADD tmp/start.sh /start.sh
 ADD tmp/wait-for-it.sh /wait-for-it.sh
 ARG VERSION

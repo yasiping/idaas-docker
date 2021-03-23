@@ -6,6 +6,8 @@ echo "########################################################"
 
 cd /capaa
 bash ./install.sh
+mv -f /application.yml /data/mc-center/conf/application.yml
+
 cd /capaa/mc-center/bin/
 bash ./startup_mc_center.sh
 
