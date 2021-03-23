@@ -91,7 +91,7 @@ check_args() {
 }
 
 prepare() {
-    sed -i 's/^IDAAS_VERSION=.*$/IDAAS_VERSION='$version'/g' .env
+    sed -i 's/^IDAAS_VERSION=.*$/IDAAS_VERSION='$version'/g' .env_file
 #    sed -i 's/"version":.*/"version": "'$version'",/g' ENV/omp.config.json
     image_names=$(cat docker-compose.yaml | grep "^[[:space:]]*image:" | grep -v "filebeat:" | grep -v "kibana:" | sed -e "s/\s*image:\s*//g" | sed -e "s/:.*//g")
     images=''
