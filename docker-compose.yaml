@@ -1,4 +1,11 @@
-version: '3.5'
+version: '2.2'
+x-logging:
+ &default-logging
+ driver: json-file
+ options:
+  max-size: 100m
+  max-file: "2"
+
 services:
 
  idaas-db:
@@ -16,6 +23,7 @@ services:
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
   user: root
+  logging: *default-logging
   networks:
    idaas_net:
     aliases:
@@ -34,6 +42,7 @@ services:
    - idaas-db
   restart: always
   user: root
+  logging: *default-logging
   networks:
    idaas_net:
     ipv4_address: 172.15.236.3
@@ -42,12 +51,12 @@ services:
 
 
 networks:
-  drcc_net:
+  idaas_net:
     driver: bridge
     driver_opts:
       com.docker.network.enable_ipv6: "false"
     ipam:
       driver: default
       config:
-      - subnet: 172.15.236.0/24
-        gateway: 172.15.236.1
+      - subnet: 172.15.230.0/24
+        gateway: 172.15.230.1
