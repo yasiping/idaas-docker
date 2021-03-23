@@ -1,7 +1,7 @@
 ARG VERSION
 FROM idaas-base:${VERSION}
 
-RUN yum ${YUM_FLAGS_COMMON} install yum install java java-1.8.0-openjdk-devel 1>/dev/null
+RUN yum ${YUM_FLAGS_COMMON} install yum install java java-1.8.0-openjdk-devel
 #           && \
 #    yum ${YUM_FLAGS_COMMON} clean all && \
 #    rm -rf /var/cache/ldconfig/ && \
