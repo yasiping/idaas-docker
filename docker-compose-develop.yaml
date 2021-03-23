@@ -13,7 +13,7 @@ services:
   build: ./APP/idaas-db
   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
   volumes:
-    - ./okp_env/var/lib/mysql:/var/lib/mysql:rw
+    - ./idaas_env/var/lib/mysql:/var/lib/mysql:rw
   environment:
    - DB_SERVER_HOST=idaas-db
    - DB_SERVER_PORT=3306
