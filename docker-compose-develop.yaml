@@ -23,6 +23,8 @@ services:
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
   user: root
+  env_file:
+   - .env_file
   logging: *default-logging
   networks:
    idaas_net:
@@ -42,13 +44,14 @@ services:
    - idaas-db
   restart: always
   user: root
+  env_file:
+   - .env_file
   logging: *default-logging
   networks:
    idaas_net:
     ipv4_address: 172.15.236.3
     aliases:
      - omc-idaas
-
 
 networks:
   idaas_net:
