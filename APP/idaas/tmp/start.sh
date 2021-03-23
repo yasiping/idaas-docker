@@ -6,6 +6,8 @@ echo "########################################################"
 
 cd /capaa
 bash ./install.sh
+cd /capaa/mc-center/bin/
+bash ./startup_mc_center.sh
 
 while :
 do

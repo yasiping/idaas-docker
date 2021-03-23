@@ -29,6 +29,7 @@ services:
   volumes:
    - /etc/localtime:/etc/localtime:ro
    - ./idaas_env/mc-center/:/capaa/:rw
+   - ./idaas_env/conf:/data/mc-center/conf/:rw
    - ./log/idaas:/data/log/mc-center/:rw
   depends_on:
    - idaas-db
