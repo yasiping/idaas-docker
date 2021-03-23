@@ -31,16 +31,8 @@ EOF
 echo "Down packge from FTP successfully."
 
 rm -rf APP/idaas-db/tmp/
-rm -rf APP/idaas-base/tmp/py_package
-rm -rf APP/idaas-base/tmp/package
 
 tar -zvxf mc-center.tar
-
-cp -r idaas_package APP/idaas-base/tmp/package
-cp -r py_package APP/idaas-base/tmp/
-
-
-
 
 date > APP/idaas/tmp/datetime.txt
 
