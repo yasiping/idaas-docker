@@ -103,7 +103,6 @@ prepare() {
       mv docker-compose.yaml docker-compose.yaml.bk
       mv docker-compose-develop.yaml docker-compose.yaml
     fi
-    sed -i 's/\s*image:.*$/\s*image:'$version'/g' docker-compose.yaml
 }
 
 build_images() {
