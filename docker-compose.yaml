@@ -22,6 +22,7 @@ services:
    - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
+  restart: always
   user: root
   env_file:
    - .env_file
