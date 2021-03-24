@@ -35,7 +35,7 @@ services:
   image: idaas:${IDAAS_VERSION}
   build: ./APP/idaas
   ports:
-    - "8020:18020"
+    - "18020:18020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
    - ./idaas_env/mc-center/:/capaa/:rw
