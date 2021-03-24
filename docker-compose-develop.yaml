@@ -11,6 +11,8 @@ services:
  idaas-db:
   image: idaas-db:${IDAAS_VERSION}
   build: ./APP/idaas-db
+  ports:
+   - "3306:3306"
   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
   volumes:
     - ./idaas_env/var/lib/mysql:/var/lib/mysql:rw
@@ -22,20 +24,22 @@ services:
    - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
+  restart: always
   user: root
   env_file:
    - .env_file
   logging: *default-logging
-  networks:
-   idaas_net:
-    aliases:
-     - idaas-db
+  network_mode: "host"
+#  networks:
+#   idaas_net:
+#    aliases:
+#     - idaas-db
 
  idaas:
   image: idaas:${IDAAS_VERSION}
   build: ./APP/idaas
   ports:
-    - "8020:18020"
+    - "18020:18020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
    - ./idaas_env/mc-center/:/capaa/:rw
@@ -47,18 +51,19 @@ services:
   env_file:
    - .env_file
   logging: *default-logging
-  networks:
-   idaas_net:
-    ipv4_address: 172.15.236.3
-    aliases:
-     - omc-idaas
+  network_mode: "host"
+#  networks:
+#   idaas_net:
+#    ipv4_address: 172.15.236.3
+#    aliases:
+#     - omc-idaas
 
-networks:
-  idaas_net:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.15.236.0/24
+#networks:
+#  idaas_net:
+#    driver: bridge
+#    driver_opts:
+#      com.docker.network.enable_ipv6: "false"
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 172.15.236.0/24
