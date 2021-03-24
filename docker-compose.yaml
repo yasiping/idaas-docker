@@ -11,6 +11,7 @@ services:
  idaas-db:
   image: idaas-db:${IDAAS_VERSION}
   build: ./APP/idaas-db
+  restart: always
   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --max_connections=1024
   volumes:
     - ./idaas_env/var/lib/mysql:/var/lib/mysql:rw
@@ -22,7 +23,6 @@ services:
    - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
-  restart: always
   user: root
   env_file:
    - .env_file
