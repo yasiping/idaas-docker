@@ -23,7 +23,8 @@ RUN yum ${YUM_FLAGS_COMMON} install yum install java \
     rm -rf /tmp/package
 
 ADD tmp/datetime.txt /app/
-#ADD tmp/application.yml  /application.yml
+ADD tmp/application.yml  /application.yml
+ADD tmp/mcApp.json   /mcApp.json
 ADD tmp/start.sh /start.sh
 ADD tmp/wait-for-it.sh /wait-for-it.sh
 ARG VERSION

@@ -34,4 +34,4 @@ logging:
 uc-center:
   accessPath: https://172.15.236.3:18020
 
-#builtinApp: data-support,data-manage,data-osm,data-process
+builtinApp: data-notice
