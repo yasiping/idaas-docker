@@ -8,6 +8,7 @@ echo "########################################################"
 cd /capaa
 bash ./install.sh
 
+# 修改配置文件，增加通知中心为内置应用
 mv -f /application.yml /data/mc-center/conf/application.yml
 mv -f /mcApp.json /data/mc-center/conf/mcApp.json
 
