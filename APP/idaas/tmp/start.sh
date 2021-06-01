@@ -9,7 +9,12 @@ cd /capaa
 bash ./install.sh
 
 # 修改配置文件，增加通知中心为内置应用
-#mv -f /application.yml /data/mc-center/conf/application.yml
+if [ `grep -c "data-notice" /data/mc-center/conf/application.yml` -eq '0' ]; then
+    echo "had init"
+else
+    mv -f /application.yml /data/mc-center/conf/application.yml
+fi
+
 mv -f /mcApp.json /data/mc-center/conf/mcApp.json
 
 
