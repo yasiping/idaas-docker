@@ -99,10 +99,10 @@ prepare() {
         images=${images}' '${image_name}:${version}
     done
 
-    if [ $version == 'develop' ]; then
-      mv docker-compose.yaml docker-compose.yaml.bk
-      mv docker-compose-develop.yaml docker-compose.yaml
-    fi
+#    if [ $version == 'develop' ]; then
+#      mv docker-compose.yaml docker-compose.yaml.bk
+#      mv docker-compose-develop.yaml docker-compose.yaml
+#    fi
 }
 
 build_images() {
