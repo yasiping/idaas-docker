@@ -18,8 +18,7 @@ fi
 cd /capaa/mc-center/bin/
 bash ./startup_mc_center.sh
 
-while :
-do
-    sleep 3600;
-done
-#################################################
+
+
+echo "** Executing supervisord"
+exec /usr/bin/supervisord -c /etc/supervisord.conf -n

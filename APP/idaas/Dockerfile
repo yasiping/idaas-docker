@@ -27,6 +27,7 @@ ADD tmp/application.yml  /application.yml
 ADD tmp/mcApp.json   /mcApp.json
 ADD tmp/start.sh /start.sh
 ADD tmp/wait-for-it.sh /wait-for-it.sh
+ADD tmp/etc/supervisord.d/* /etc/supervisord.d/
 ARG VERSION
 ARG GITAUTH
 
