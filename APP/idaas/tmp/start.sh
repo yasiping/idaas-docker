@@ -15,8 +15,8 @@ if [ `grep -c "data-notice" /data/mc-center/conf/application.yml` -eq '0' ]; the
 fi
 
 
-cd /capaa/mc-center/bin/
-bash ./startup_mc_center.sh
+#cd /capaa/mc-center/bin/
+#bash ./startup_mc_center.sh
 
 
 
