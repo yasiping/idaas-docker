@@ -14,12 +14,12 @@ if [ `grep -c "data-notice" /data/mc-center/conf/application.yml` -eq '0' ]; the
     mv -f /application.yml /data/mc-center/conf/application.yml
 fi
 
-cp -f /startup_mc_center.sh  /capaa/mc-center/bin/startup_mc_center.sh
+#cp -f /startup_mc_center.sh  /capaa/mc-center/bin/startup_mc_center.sh
+#
+#cd /capaa/mc-center/bin/
+#bash ./startup_mc_center.sh
 
-cd /capaa/mc-center/bin/
-bash ./startup_mc_center.sh
 
 
-
-#echo "** Executing supervisord"
-#exec /usr/bin/supervisord -c /etc/supervisord.conf -n
+echo "** Executing supervisord"
+exec /usr/bin/supervisord -c /etc/supervisord.conf -n
