@@ -34,4 +34,4 @@ logging:
 uc-center:
   accessPath: https://172.15.236.3:18020
 
-builtinApp: data-notice
+builtinApp: data-notice,data-drcc
