@@ -1,0 +1,268 @@
+#!/usr/bin/env bash
+
+
+
+funread () {
+         echo -e "\e[1;31m Do you want to upgrade your DRCC? (Y/N) \e[0m"
+         read warn
+}
+
+
+funpre () {
+
+if [ "$warn" = Y ]; then
+
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The DRCC will be upgraded. \e[0m"
+	echo "**********************************************************"
+	echo ""
+	funresource
+	funupstep
+
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The DRCC upgrade has been cancled. \e[0m"
+	echo "**********************************************************"
+	echo ""
+fi
+
+}
+
+funupstep () {
+ID=`sudo docker ps -a |grep "drcc-web" | awk '{print $1}'`
+[ ! -f "/onekeeper/drcc-docker/docker-compose.yaml" ] && FIRST_INSTALL=1
+if [ ! -n "$ID" ]; then
+        funbackup
+        funfilelist
+        funupgrade
+        funpost
+else
+        fundownokp
+        funbackup
+        funfilelist
+        funupgrade
+        funpost
+fi
+}
+
+fundownokp () {
+# sudo systemctl stop osm
+ cd /onekeeper/drcc-docker
+ sudo /usr/local/bin/docker-compose down
+}
+
+funbackup () {
+if [ -d "/backup/upgradebak/drcc" ];then
+funrename
+else
+sudo mkdir -p /backup/upgradebak/drcc
+funrename
+fi
+
+funbackupdrcc
+}
+
+funbackupdrcc () {
+if [ -f "/backup/upgradebak/drcc/docker-compose.yaml" ];then
+dt=$(date +%H%M)
+sudo mv /backup/upgradebak/drcc/docker-compose.yaml /backup/upgradebak/drcc/docker-compose.yaml.$dt
+sudo cp /onekeeper/drcc-docker/docker-compose.yaml /backup/upgradebak/drcc/docker-compose.yaml
+elif [  -f "/onekeeper/drcc-docker/docker-compose.yaml" ];then
+sudo cp /onekeeper/drcc-docker/docker-compose.yaml /backup/upgradebak/drcc/docker-compose.yaml
+fi
+
+if [ -f "/backup/upgradebak/drcc/.env" ];then
+DT=$(date +%H%M)
+sudo mv /backup/upgradebak/drcc/.env   /backup/upgradebak/drcc/.env.$DT
+sudo cp /onekeeper/drcc-docker/.env /backup/upgradebak/drcc/.env
+elif [ -f "/onekeeper/drcc-docker/.env" ];then
+sudo cp /onekeeper/drcc-docker/.env /backup/upgradebak/drcc/.env
+fi
+
+if [ -f "/backup/upgradebak/drcc/.env_file" ];then
+DT=$(date +%H%M)
+sudo mv /backup/upgradebak/drcc/.env_file   /backup/upgradebak/drcc/.env_file.$DT
+sudo cp /onekeeper/drcc-docker/.env_file /backup/upgradebak/drcc/.env_file
+elif [ -f "/onekeeper/drcc-docker/.env_file" ] && [ "$(grep SSO_BASE_URL /onekeeper/drcc-docker/.env_file)" ];then
+sudo cp /onekeeper/drcc-docker/.env_file /backup/upgradebak/drcc/.env_file
+fi
+}
+
+
+funrename () {
+if [ -d "/onekeeper/drcc-docker" ];then
+DT=$(date +%H%M)
+cd
+
+funrmimage
+fi
+}
+
+funrmimage () {
+sudo docker images |grep drcc |awk '{print $3}'|xargs sudo docker rmi -f >/dev/null 2>&1
+}
+
+
+funresource () {
+tar_package=$(ls /backup/drcc-docker* 2> /dev/null | wc -l)
+
+if [ "$tar_package" != "1" ] ;then  #如果存在文件
+   echo -e "\e[1;31m  Error: The count of  DRCC tar package in the folder of '/backup/' is not equal to 1\e[0m"
+   exit 1
+fi
+}
+
+funfilelist () {
+sudo find /backup/ -type f -iname 'drcc-docker*' |xargs ls -lt |awk {'print $9'} | grep -v '.md5' > /tmp/filelist
+sourcepack=$(head -1 /tmp/filelist)
+ver=$(echo $sourcepack | sed 's/.*solo-\(.*\)\.tar.*/\1/g')
+funversion
+}
+
+funversion () {
+        echo -e "\e[1;31m The drccupgrade version: ${ver}  \e[0m"
+}
+
+funupgrade () {
+
+if [[  -n "$sourcepack" ]]; then
+
+    if [ -d "/onekeeper/drcc-docker/drcc_env/drcc-web/web" ]; then
+        rm -rf /onekeeper/drcc-docker/drcc_env/drcc-web/web
+    fi
+
+sudo tar -xzvf $sourcepack -C /onekeeper/
+sudo docker load < /onekeeper/drcc-docker/images/okp-drcc.tar
+cd /onekeeper/drcc-docker
+funconfigservice
+fundeplic
+sudo /usr/local/bin/docker-compose up -d
+#sudo systemctl enable osm
+#sudo systemctl start osm
+fi
+}
+
+funconfigservice () {
+if [ -f "/onekeeper/drcc-docker/deploy" ];then
+cp /onekeeper/drcc-docker/deploy/* /usr/local/bin
+fi
+
+}
+
+fundeplic () {
+
+if [ -f "/backup/upgradebak/drcc/.env" ];then
+sudo cp /backup/upgradebak/drcc/.env /onekeeper/drcc-docker/.env >/dev/null 2>&1
+sed -i "s/DRCC_VERSION=.*/DRCC_VERSION=${ver}/g" /onekeeper/drcc-docker/.env  >/dev/null 2>&1
+
+fi
+if [ -f "/backup/upgradebak/drcc/.env_file" ];then
+sudo cp /backup/upgradebak/drcc/.env_file /onekeeper/drcc-docker/.env_file >/dev/null 2>&1
+sed -i "s/DRCC_PERMISSION_VERSION=.*/DRCC_PERMISSION_VERSION=${ver}/g" /onekeeper/drcc-docker/.env_file  >/dev/null 2>&1
+else
+    setenv
+fi
+}
+
+
+setenv () {
+    env_file="/onekeeper/drcc-docker/.env_file"
+
+    if [ ! -f $env_file ]; then
+        touch $env_file
+        writeenv
+        tofile
+    fi
+
+    source "$env_file"
+
+    for env in SSO_BASE_URL SSO_APP_ID SSO_APP_SECRET CMDB_BASE_URL DRCC_MAIN_URL DRCC_PERMISSION_VERSION
+    do
+        if   [ !  "$env"   ]; then
+            echo -e "\e[1;31m $env not found, add $env in /onekeeper/drcc-docker/.env_file\e[0m"
+            exit 1
+        fi
+    done
+}
+
+writeenv() {
+    echo "**********************************************************"
+	echo "Enter the required environmental information according to the prompt information"
+	echo "**********************************************************"
+    echo "Idaas server address，e.g.: https://192.168.23.255:18020"
+    read SSO_BASE_URL
+    echo "**********************************************************"
+    echo "The APP_ID of DRCC in Idaas server, e.g. mc207101"
+    read SSO_APP_ID
+    echo "**********************************************************"
+    echo "The APP_ID of DRCC in Idaas server, e.g. 41pSXEnRE7qNgoQD"
+    read SSO_APP_SECRET
+    echo "**********************************************************"
+    echo "The CMDB server address, e.g. http://192.168.23.255:18060"
+    read CMDB_BASE_URL
+    echo "**********************************************************"
+    echo "The DRCC server address, e.g. http://192.168.23.255:8066/main"
+    read DRCC_MAIN_URL
+    echo "**********************************************************"
+    echo "The DRCC version, e.g. 1.0.0"
+    read PERMISSION_VERSION
+    echo "**********************************************************"
+    echo "The Notice Center address, e.g. http://192.168.23.255:18060/main"
+    read NOTICE_URL
+    echo "**********************************************************"
+    echo "The APP_ID of Notice Center in Idaas server, e.g. mc350982"
+    read NOTICE_APP_ID
+    read -p "Are you sure the message you had entered (Y/N):" warn
+    if [ "$warn" = N ]; then
+        writeenv
+    fi
+}
+
+tofile() {
+    cat>$env_file<<EOF
+SSO_BASE_URL=$SSO_BASE_URL
+SSO_APP_ID=$SSO_APP_ID
+SSO_APP_SECRET=$SSO_APP_SECRET
+CMDB_BASE_URL=$CMDB_BASE_URL
+DRCC_MAIN_URL=$DRCC_MAIN_URL
+PERMISSION_VERSION=$PERMISSION_VERSION
+NOTICE_URL=$NOTICE_URL
+NOTICE_APP_ID=$NOTICE_APP_ID
+EOF
+}
+
+
+funpost () {
+IDNEW=`sudo docker ps -a |grep "drcc-web" | awk '{print $1}'`
+ver=`sudo docker ps -a |grep "drcc-web" | awk '{print $2}' |awk -F: '{print $2}'`
+ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
+if [ -d "/onekeeper/drcc-docker" ];then
+if [ ! -n "$IDNEW" ]; then
+        funpost
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The DRCC has been upgraded to version $ver successfully. You can access  DRCC Web Console with the following information: \e[0m"
+	echo ""
+        echo -e "\e[1;34m URL: http://$ip:8066 \e[0m"
+	echo "**********************************************************"
+
+fi
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The DRCC upgrade failed. Please check logs for details. \e[0m"
+	echo ""
+	echo "**********************************************************"
+
+fi
+rm -rf /tmp/filelist* >/dev/null 2>&1
+}
+
+main() {
+        funread
+        funpre
+}
+main
