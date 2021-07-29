@@ -1,0 +1,5 @@
+#!/bin/bash
+if [ -f /onekeeper/idaas-docker/docker-compose.yaml ];then
+cd /onekeeper/idaas-docker/
+docker-compose -f /onekeeper/idaas-docker/docker-compose.yaml down
+fi

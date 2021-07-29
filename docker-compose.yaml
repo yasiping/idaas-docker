@@ -39,8 +39,8 @@ services:
     - "18020:18020"
   volumes:
    - /etc/localtime:/etc/localtime:ro
-   - ./idaas_env/mc-center/:/capaa/:rw
-   - ./idaas_env/data/:/data/:rw
+#   - ./idaas_env/mc-center/:/capaa/:rw
+#   - ./idaas_env/data/:/data/:rw
   depends_on:
    - idaas-db
   restart: always
