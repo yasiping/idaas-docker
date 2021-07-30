@@ -34,10 +34,6 @@ rm -rf APP/idaas-db/tmp/
 
 tar -zvxf mc-center.tar -C ./APP/idaas/tmp/
 
-echo "***************************************"
-ls ./APP/idaas/tmp/
-echo "***************************************"
-
 
 date > APP/idaas/tmp/datetime.txt
 
