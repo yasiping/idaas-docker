@@ -174,7 +174,7 @@ pack_images() {
     mkdir -p ./idaas-docker/idaas_env/var/lib/mysql
     mkdir -p ./idaas-docker/idaas_env/
 
-    mv  mc-center  ./idaas-docker/idaas_env/
+#    mv  mc-center  ./idaas-docker/idaas_env/
 
     if [ $version == 'develop' ]; then
       mkdir -p ./idaas-docker/log/idaas
