@@ -27,7 +27,7 @@ ADD tmp/datetime.txt /app/
 ADD tmp/application.yml  /application.yml
 ADD tmp/mcApp.json   /mcApp.json
 ADD tmp/start.sh /start.sh
-ADD tmp/mc_center /capaa/
+ADD tmp/mc-center /capaa/
 #ADD tmp/startup_mc_center.sh /startup_mc_center.sh
 ADD tmp/wait-for-it.sh /wait-for-it.sh
 ADD tmp/etc/supervisord.d/* /etc/supervisord.d/
