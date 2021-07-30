@@ -1,0 +1,105 @@
+#!/bin/bash
+set -e
+############################osminstall#####################################
+funversion () {
+        echo -e "\e[1;31m The IDAAS install version: $ver  \e[0m"
+}
+
+funpre () {
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS installation is starting, please wait a few minutes... \e[0m"
+	echo "**********************************************************"
+}
+
+funfilelist () {
+tar_package=$(ls /backup/idaas-docker* 2> /dev/null | wc -l)
+
+if [ "$tar_package" != "1" ] ;then  #如果存在文件
+   echo -e "\e[1;31m The count of  IDAAS tar package in the folder of '/backup/' is not equal to one\e[0m"
+   exit 1
+fi
+
+
+sudo find /backup/ -type f -iname 'idaas-docker*' |xargs ls -lt |awk {'print $9'}  | grep -v '.md5' > /tmp/idaasfilelist
+sourcepack=$(head -1 /tmp/idaasfilelist)
+ver=$(echo $sourcepack | sed 's/.*solo-\(.*\)\.tar.*/\1/g')
+funversion
+}
+
+funinstall () {
+if [[  -n "$sourcepack" ]]; then
+sudo tar -xzvf $sourcepack -C /onekeeper/
+sudo chmod +r /onekeeper/idaas-docker/images/osc-idaas.tar
+sudo docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
+cd /onekeeper/idaas-docker
+#fundeplic
+addenv
+sudo /usr/local/bin/docker-compose up -d
+fi
+}
+
+addenv () {
+echo -e "\e[1;31m add ENV to .env_file \e[0m"
+ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
+addr="https://"$ip":18020"
+test -s /onekeeper/idaas-docker/.env_file && sed -i "\$a\UC-CENTER_ACCESSPATH=${addr}" /onekeeper/idaas-docker/.env_file || echo "UC-CENTER_ACCESSPATH=${addr}" >> /onekeeper/idaas-docker/.env_file
+}
+
+funrename () {
+
+if [ -d "/backup/upgradebak/idaas" ];then
+echo ''
+else
+sudo mkdir -p /backup/upgradebak/idaas
+fi
+if [ -d "/onekeeper/idaas-docker" ];then
+DT=$(date +%H%M)
+cd
+sudo mv /onekeeper/idaas-docker /backup/upgradebak/idaas/idaas-docker.$DT >/dev/null 2>&1
+funinstall
+else
+funinstall
+fi
+}
+
+funpost () {
+
+IDNEW=`sudo docker ps -a |grep "idaas" | awk '{print $1}'`
+ver=`sudo docker ps -a |grep "idaas" | awk '{print $2}' |awk -F: '{print $2}'`
+ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
+if [ -d "/onekeeper/idaas-docker" ];then
+if [ ! -n "$IDNEW" ]; then
+        funpost
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS $ver has been installed successfully. You can access IDAAS Web Console with the following information: \e[0m"
+	echo -e "\e[1;34m URL: https://$ip:18020 \e[0m"
+	echo "**********************************************************"
+
+fi
+else
+        echo ""
+        echo "**********************************************************"
+        echo -e "\e[1;31m The IDAAS installation failed. Please check logs for details. \e[0m"
+        echo ""
+        echo "**********************************************************"
+fi
+rm -rf /tmp/idaasfilelist*  >/dev/null 2>&1
+}
+
+main() {
+
+#funversion
+
+ID=`sudo docker ps -a |grep "idaas" | awk '{print $1}'`
+if [ ! -n "$ID" ]; then
+	funpre
+        funfilelist
+        funrename
+	funpost
+else
+        echo -e "\e[1;31m The IDAAS has been aleady installed. You should uninstall the previous version first. Or upgrade it to new version with command idaasupgrade.\e[0m"
+fi
+}
+main

@@ -99,10 +99,11 @@ prepare() {
         images=${images}' '${image_name}:${version}
     done
 
-    if [ $version == 'develop' ]; then
-      mv docker-compose.yaml docker-compose.yaml.bk
-      mv docker-compose-develop.yaml docker-compose.yaml
-    fi
+#    if [ $version == 'develop' ]; then
+#      mv docker-compose.yaml docker-compose.yaml.bk
+#      mv docker-compose-develop.yaml docker-compose.yaml
+#    fi
+    sed -i 's/${IDAAS_VERSION}/'$version'/g' docker-compose.yaml
 }
 
 build_images() {

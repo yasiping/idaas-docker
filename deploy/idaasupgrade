@@ -1,0 +1,214 @@
+#!/usr/bin/env bash
+
+
+
+funread () {
+         echo -e "\e[1;31m Do you want to upgrade your IDAAS? (Y/N) \e[0m"
+         read warn
+}
+
+
+funpre () {
+
+if [ "$warn" = Y ]; then
+
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS will be upgraded. \e[0m"
+	echo "**********************************************************"
+	echo ""
+	funresource
+	funupstep
+
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS upgrade has been cancled. \e[0m"
+	echo "**********************************************************"
+	echo ""
+fi
+
+}
+
+funupstep () {
+ID=`sudo docker ps -a |grep "idaas" | awk '{print $1}'`
+[ ! -f "/onekeeper/idaas-docker/docker-compose.yaml" ] && FIRST_INSTALL=1
+if [ ! -n "$ID" ]; then
+        funbackup
+        funfilelist
+        funupgrade
+        funpost
+else
+        fundownokp
+        funbackup
+        funfilelist
+        funupgrade
+        funpost
+fi
+}
+
+fundownokp () {
+# sudo systemctl stop osm
+ cd /onekeeper/idaas-docker
+ sudo /usr/local/bin/docker-compose down
+}
+
+funbackup () {
+if [ -d "/backup/upgradebak/idaas" ];then
+funrename
+else
+sudo mkdir -p /backup/upgradebak/idaas
+funrename
+fi
+
+funbackupidaas
+}
+
+funbackupidaas () {
+if [ -f "/backup/upgradebak/idaas/docker-compose.yaml" ];then
+dt=$(date +%H%M)
+sudo mv /backup/upgradebak/idaas/docker-compose.yaml /backup/upgradebak/idaas/docker-compose.yaml.$dt
+sudo cp /onekeeper/idaas-docker/docker-compose.yaml /backup/upgradebak/idaas/docker-compose.yaml
+elif [  -f "/onekeeper/idaas-docker/docker-compose.yaml" ];then
+sudo cp /onekeeper/idaas-docker/docker-compose.yaml /backup/upgradebak/idaas/docker-compose.yaml
+fi
+
+if [ -f "/backup/upgradebak/idaas/.env" ];then
+DT=$(date +%H%M)
+sudo mv /backup/upgradebak/idaas/.env   /backup/upgradebak/idaas/.env.$DT
+sudo cp /onekeeper/idaas-docker/.env /backup/upgradebak/idaas/.env
+elif [ -f "/onekeeper/idaas-docker/.env" ];then
+sudo cp /onekeeper/idaas-docker/.env /backup/upgradebak/idaas/.env
+fi
+
+if [ -f "/backup/upgradebak/idaas/.env_file" ];then
+DT=$(date +%H%M)
+sudo mv /backup/upgradebak/idaas/.env_file   /backup/upgradebak/idaas/.env_file.$DT
+sudo cp /onekeeper/idaas-docker/.env_file /backup/upgradebak/idaas/.env_file
+elif [ -f "/onekeeper/idaas-docker/.env_file" ];then
+sudo cp /onekeeper/idaas-docker/.env_file /backup/upgradebak/idaas/.env_file
+fi
+}
+
+
+funrename () {
+if [ -d "/onekeeper/idaas-docker" ];then
+DT=$(date +%H%M)
+cd
+
+funrmimage
+fi
+}
+
+funrmimage () {
+sudo docker images |grep idaas |awk '{print $3}'|xargs sudo docker rmi -f >/dev/null 2>&1
+}
+
+
+funresource () {
+tar_package=$(ls /backup/idaas-docker* 2> /dev/null | wc -l)
+
+if [ "$tar_package" != "1" ] ;then  #如果存在文件
+   echo -e "\e[1;31m  Error: The count of  IDAAS tar package in the folder of '/backup/' is not equal to 1\e[0m"
+   exit 1
+fi
+}
+
+funfilelist () {
+sudo find /backup/ -type f -iname 'idaas-docker*' |xargs ls -lt |awk {'print $9'} | grep -v '.md5' > /tmp/idaasfilelist
+sourcepack=$(head -1 /tmp/idaasfilelist)
+ver=$(echo $sourcepack | sed 's/.*solo-\(.*\)\.tar.*/\1/g')
+funversion
+}
+
+funversion () {
+        echo -e "\e[1;31m The idaasupgrade version: ${ver}  \e[0m"
+}
+
+funupgrade () {
+
+if [[  -n "$sourcepack" ]]; then
+sudo tar -xzvf $sourcepack -C /onekeeper/
+sudo docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
+cd /onekeeper/idaas-docker
+funconfigservice
+fundeplic
+sudo /usr/local/bin/docker-compose up -d
+#sudo systemctl enable osm
+#sudo systemctl start osm
+fi
+}
+
+funconfigservice () {
+if [ -f "/onekeeper/idaas-docker/deploy" ];then
+cp /onekeeper/idaas-docker/deploy/* /usr/local/bin
+fi
+
+}
+
+fundeplic () {
+
+if [ -f "/backup/upgradebak/idaas/.env" ];then
+sudo cp /backup/upgradebak/idaas/.env /onekeeper/idaas-docker/.env >/dev/null 2>&1
+sed -i "s/IDAAS_VERSION=.*/IDAAS_VERSION=${ver}/g" /onekeeper/idaas-docker/.env  >/dev/null 2>&1
+
+fi
+if [ -f "/backup/upgradebak/idaas/.env_file" ];then
+sudo cp /backup/upgradebak/idaas/.env_file /onekeeper/idaas-docker/.env_file >/dev/null 2>&1
+else
+    setenv
+fi
+}
+
+
+
+setenv () {
+    env_file="/onekeeper/idaas-docker/.env_file"
+
+    if [ ! -f $env_file ]; then
+        touch $env_file
+        addenv
+    else
+        addenv
+    fi
+}
+
+addenv () {
+ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
+addr="https://"$ip":18020"
+test -s /onekeeper/idaas-docker/.env_file && sed -i "\$a\UC-CENTER_ACCESSPATH=${addr}" /onekeeper/idaas-docker/.env_file || echo "UC-CENTER_ACCESSPATH=${addr}" >> /onekeeper/idaas-docker/.env_file
+
+}
+
+funpost () {
+IDNEW=`sudo docker ps -a |grep "idaas" | awk '{print $1}'`
+ver=`sudo docker ps -a |grep "idaas" | awk '{print $2}' |awk -F: '{print $2}'`
+ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
+if [ -d "/onekeeper/idaas-docker" ];then
+if [ ! -n "$IDNEW" ]; then
+        funpost
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS has been upgraded to version $ver successfully. You can access  IDAAS Web Console with the following information: \e[0m"
+	echo ""
+        echo -e "\e[1;34m URL: https://$ip:18020 \e[0m"
+	echo "**********************************************************"
+
+fi
+else
+	echo ""
+	echo "**********************************************************"
+	echo -e "\e[1;31m The IDAAS upgrade failed. Please check logs for details. \e[0m"
+	echo ""
+	echo "**********************************************************"
+
+fi
+rm -rf /tmp/idaasfilelist* >/dev/null 2>&1
+}
+
+main() {
+        funread
+        funpre
+}
+main
