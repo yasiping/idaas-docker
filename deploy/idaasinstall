@@ -42,7 +42,8 @@ addenv () {
 echo -e "\e[1;31m add ENV to .env_file \e[0m"
 ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
 addr="https://"$ip":18020"
-sudo test -s /onekeeper/idaas-docker/.env_file && sed -i "\$a\UC-CENTER_ACCESSPATH=${addr}" /onekeeper/idaas-docker/.env_file || echo "UC-CENTER_ACCESSPATH=${addr}" >> /onekeeper/idaas-docker/.env_file >/dev/null 2>&1
+sudo chmod 664 /onekeeper/idaas-docker/.env_file
+sudo test -s /onekeeper/idaas-docker/.env_file && sudo sed -i "\$a\UC-CENTER_ACCESSPATH=${addr}" /onekeeper/idaas-docker/.env_file ||  sudo echo "UC-CENTER_ACCESSPATH=${addr}" | sudo tee /onekeeper/idaas-docker/.env_file >/dev/null 2>&1
 }
 
 funrename () {
