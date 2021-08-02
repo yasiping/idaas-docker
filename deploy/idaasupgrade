@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
-
-
+#!/bin/bash
+set -e
+############################osminstall#####################################
 
 funread () {
          echo -e "\e[1;31m Do you want to upgrade your IDAAS? (Y/N) \e[0m"
