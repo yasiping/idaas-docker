@@ -129,6 +129,7 @@ funupgrade () {
 
 if [[  -n "$sourcepack" ]]; then
 sudo tar -xzvf $sourcepack -C /onekeeper/
+sudo chmod +r /onekeeper/idaas-docker/images/osc-idaas.tar
 sudo docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
 cd /onekeeper/idaas-docker
 funconfigservice
