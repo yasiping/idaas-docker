@@ -170,7 +170,7 @@ pack_images() {
     rm -rf ./idaas-docker
     mkdir -p ./idaas-docker
     mkdir -p ./idaas-docker/images
-    mkdir -p ./idaas-docker/idaas_env/etc/
+#    mkdir -p ./idaas-docker/idaas_env/etc/
     mkdir -p ./idaas-docker/idaas_env/var/lib/mysql
     mkdir -p ./idaas-docker/idaas_env/
 
@@ -198,7 +198,7 @@ pack_images() {
     cp docker-compose.yaml ./idaas-docker/docker-compose.yaml
     cp .env* ./idaas-docker/
     sed -i '/build:/d' ./idaas-docker/docker-compose.yaml
-    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
+#    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
 
 
 
