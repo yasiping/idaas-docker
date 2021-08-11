@@ -34,6 +34,9 @@ ADD tmp/etc/supervisord.d/* /etc/supervisord.d/
 ARG VERSION
 ARG GITAUTH
 
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 USER root
 
 EXPOSE 8020/TCP

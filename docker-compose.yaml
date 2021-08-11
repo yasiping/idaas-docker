@@ -23,6 +23,7 @@ services:
    - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
+   - TZ=Asia/Shanghai
   user: root
   env_file:
    - .env_file
@@ -37,14 +38,12 @@ services:
   build: ./APP/idaas
   ports:
     - "18020:18020"
-  volumes:
-   - /etc/localtime:/etc/localtime:ro
-#   - ./idaas_env/mc-center/:/capaa/:rw
-#   - ./idaas_env/data/:/data/:rw
   depends_on:
    - idaas-db
   restart: always
   user: root
+  environment:
+   - TZ=Asia/Shanghai
   env_file:
    - .env_file
   logging: *default-logging
