@@ -33,7 +33,13 @@ sudo chmod +r /onekeeper/idaas-docker/images/osc-idaas.tar
 sudo docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
 cd /onekeeper/idaas-docker
 #fundeplic
+env_file="/onekeeper/idaas-docker/.env_file"
+
+if [ ! -f $env_file ]; then
+    sudo touch $env_file
+fi
 addenv
+
 sudo /usr/local/bin/docker-compose up -d
 fi
 }

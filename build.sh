@@ -196,7 +196,7 @@ pack_images() {
         success "push images complete"
     fi
     cp docker-compose.yaml ./idaas-docker/docker-compose.yaml
-    cp .env ./idaas-docker/
+#    cp .env ./idaas-docker/
     sed -i '/build:/d' ./idaas-docker/docker-compose.yaml
 #    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
 
