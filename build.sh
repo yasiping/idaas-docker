@@ -199,6 +199,7 @@ pack_images() {
     cp .env ./idaas-docker/
     sed -i '/build:/d' ./idaas-docker/docker-compose.yaml
 #    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
+    cp -r ./deploy ./idaas-docker
 
 
 
