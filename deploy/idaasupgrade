@@ -106,7 +106,7 @@ sudo docker images |grep idaas |awk '{print $3}'|xargs sudo docker rmi -f >/dev/
 
 
 funresource () {
-tar_package=$(ls /backup/idaas-docker* 2> /dev/null | wc -l)
+tar_package=$(sudo find /backup/ -maxdepth 1 -type f -iname 'idaas-docker*' |xargs ls -lt |awk {'print $9'}  | grep -v '.md5' | wc -l)
 
 if [ "$tar_package" != "1" ] ;then  #如果存在文件
    echo -e "\e[1;31m  Error: The count of  IDAAS tar package in the folder of '/backup/' is not equal to 1\e[0m"
@@ -115,7 +115,7 @@ fi
 }
 
 funfilelist () {
-sudo find /backup/ -type f -iname 'idaas-docker*' |xargs ls -lt |awk {'print $9'} | grep -v '.md5' > /tmp/idaasfilelist
+sudo find /backup/ -maxdepth 1 -type f -iname 'idaas-docker*' |xargs ls -lt |awk {'print $9'} | grep -v '.md5' > /tmp/idaasfilelist
 sourcepack=$(head -1 /tmp/idaasfilelist)
 ver=$(echo $sourcepack | sed 's/.*solo-\(.*\)\.tar.*/\1/g')
 funversion
