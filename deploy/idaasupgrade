@@ -141,7 +141,7 @@ fi
 }
 
 funconfigservice () {
-if [ -f "/onekeeper/idaas-docker/deploy" ];then
+if [ -d "/onekeeper/idaas-docker/deploy" ];then
 sudo cp /onekeeper/idaas-docker/deploy/* /usr/local/bin
 fi
 
