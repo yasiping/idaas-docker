@@ -18,13 +18,12 @@ services:
   volumes:
     - ./idaas_env/var/lib/mysql:/var/lib/mysql:rw
     - ./idaas_env/etc/mysql/my-master1.cnf:/etc/mysql/my.cnf:ro
-    - ./idaas_env/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:rw
   environment:
    - DB_SERVER_HOST=idaas-db
    - DB_SERVER_PORT=3306
    - MYSQL_USER=dmcp
    - MYSQL_PASSWORD=Dmcp321!
-   - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
+   - MYSQL_ROOT_PASSWORD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
    - TZ=Asia/Shanghai
