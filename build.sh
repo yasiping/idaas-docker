@@ -172,6 +172,7 @@ pack_images() {
     mkdir -p ./idaas-docker/images
 #    mkdir -p ./idaas-docker/idaas_env/etc/
     mkdir -p ./idaas-docker/idaas_env/var/lib/mysql
+    mkdir -p ./idaas-docker/idaas_env/etc/mysql
     mkdir -p ./idaas-docker/idaas_env/
 
 #    mv  mc-center  ./idaas-docker/idaas_env/
@@ -196,12 +197,12 @@ pack_images() {
         success "push images complete"
     fi
     cp docker-compose.yaml ./idaas-docker/docker-compose.yaml
+    cp ENV/*.cnf ./idaas-docker/idaas_env/etc/mysql/
+    cp -r ENV/docker-entrypoint-initdb.d ./idaas-docker/idaas_env/
     cp .env ./idaas-docker/
     sed -i '/build:/d' ./idaas-docker/docker-compose.yaml
 #    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
     cp -r ./deploy ./idaas-docker
-
-
 
     info "pack begin"
     tar -czvf idaas-docker-solo-$version.tar.gz idaas-docker

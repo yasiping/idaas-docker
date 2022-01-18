@@ -160,7 +160,12 @@ innodb_log_files_in_group = 3
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
 # ssl-key=/etc/mysql/server-key.pem
-
+server-id=12
+log_bin=1
+log-bin=/var/lib/mysql/binlog
+binlog_format=ROW
+auto-increment-increment=2
+auto-increment-offset=2
 
 
 [mysqldump]
