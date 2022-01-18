@@ -1,6 +1,3 @@
-set global auto_increment_increment=2
-set global auto_increment_offset=1
-
 -- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
 --
 -- Host: localhost    Database: mc_center
@@ -1212,6 +1209,3 @@ CREATE TABLE `t_user_third` (
 
 -- Dump completed on 2022-01-18 11:42:59
 
-
-set global auto_increment_increment=2;
-set global auto_increment_offset=1;
