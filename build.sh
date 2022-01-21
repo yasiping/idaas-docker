@@ -200,7 +200,6 @@ pack_images() {
     cp ENV/*.cnf ./idaas-docker/idaas_env/etc/mysql/
     cp ENV/db_init.sql ./idaas-docker/idaas_env/
     cp ENV/appIndexUrlOrder.txt ./idaas-docker/idaas_env/data/mc-center/conf/
-    cp -r ENV/docker-entrypoint-initdb.d ./idaas-docker/idaas_env/
     cp .env ./idaas-docker/
     sed -i '/build:/d' ./idaas-docker/docker-compose.yaml
 #    cp ./ENV/my.cnf ./idaas-docker/idaas_env/etc/my.cnf
