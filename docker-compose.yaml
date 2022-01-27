@@ -11,16 +11,19 @@ services:
  idaas-db:
   image: idaas-db:${IDAAS_VERSION}
   build: ./APP/idaas-db
+  ports:
+    - "13306:3306"
   restart: always
   command: mysqld --character-set-server=utf8 --collation-server=utf8_bin --skip-character-set-client-handshake --max_connections=1024
   volumes:
     - ./idaas_env/var/lib/mysql:/var/lib/mysql:rw
+    - ./idaas_env/etc/mysql/my-${MYSQL_ROLE}.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
   environment:
    - DB_SERVER_HOST=idaas-db
    - DB_SERVER_PORT=3306
    - MYSQL_USER=dmcp
    - MYSQL_PASSWORD=Dmcp321!
-   - MYSQL_ROOT_PASSWOsRD=W1wDOFRTz7ELyimB
+   - MYSQL_ROOT_PASSWORD=W1wDOFRTz7ELyimB
    - MYSQL_ALLOW_EMPTY_PASSWORD=false
    - MYSQL_DATABASE=mc_center
    - TZ=Asia/Shanghai
@@ -36,6 +39,8 @@ services:
  idaas:
   image: idaas:${IDAAS_VERSION}
   build: ./APP/idaas
+  volumes:
+    - ./idaas_env/data/mc-center/conf/appIndexUrlOrder.txt:/data/mc-center/conf/appIndexUrlOrder.txt:ro
   ports:
     - "18020:18020"
   depends_on:
