@@ -34,9 +34,13 @@ sudo docker load < /onekeeper/idaas-docker/images/osc-idaas.tar
 cd /onekeeper/idaas-docker
 #fundeplic
 env_file="/onekeeper/idaas-docker/.env_file"
+env="/onekeeper/idaas-docker/.env"
 
 if [ ! -f $env_file ]; then
     sudo touch $env_file
+fi
+if [ ! -f $env ]; then
+    sudo touch $env
 fi
 addenv
 
@@ -50,6 +54,11 @@ ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -
 addr="https://"$ip":18020"
 sudo chmod 664 /onekeeper/idaas-docker/.env_file
 sudo test -s /onekeeper/idaas-docker/.env_file && sudo sed -i "\$a\UC-CENTER_ACCESSPATH=${addr}" /onekeeper/idaas-docker/.env_file ||  sudo echo "UC-CENTER_ACCESSPATH=${addr}" | sudo tee /onekeeper/idaas-docker/.env_file >/dev/null 2>&1
+
+echo -e "\e[1;31m add ENV to .env \e[0m"
+sudo chmod 664 /onekeeper/idaas-docker/.env
+sudo test -s /onekeeper/idaas-docker/.env && sudo sed -i "\$a\MYSQL_ROLE=single" /onekeeper/idaas-docker/.env ||  sudo echo "MYSQL_ROLE=single" | sudo tee /onekeeper/idaas-docker/.env >/dev/null 2>&1
+
 }
 
 funrename () {
