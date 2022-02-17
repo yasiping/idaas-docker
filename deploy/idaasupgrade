@@ -152,22 +152,22 @@ fundeplic () {
 if [ -f "/backup/upgradebak/idaas/.env" ];then
 sudo cp /backup/upgradebak/idaas/.env /onekeeper/idaas-docker/.env >/dev/null 2>&1
 sudo sed -i "s/IDAAS_VERSION=.*/IDAAS_VERSION=${ver}/g" /onekeeper/idaas-docker/.env  >/dev/null 2>&1
+else
+    setenv
 
 fi
 if [ -f "/backup/upgradebak/idaas/.env_file" ];then
 sudo cp /backup/upgradebak/idaas/.env_file /onekeeper/idaas-docker/.env_file >/dev/null 2>&1
 else
-    setenv
+    setenvfile
 fi
 }
 
-
-
 setenv () {
-    env_file="/onekeeper/idaas-docker/.env_file"
+    env_1 ="/onekeeper/idaas-docker/.env"
 
-    if [ ! -f $env_file ]; then
-        touch $env_file
+    if [ ! -f env_1 ]; then
+        touch env_1
         addenv
     else
         addenv
@@ -175,6 +175,24 @@ setenv () {
 }
 
 addenv () {
+sudo chmod 664 /onekeeper/idaas-docker/.env
+if [ `grep -c "MYSQL_ROLE" /onekeeper/idaas-docker/.env` -ne '1' ];then
+    sudo test -s /onekeeper/idaas-docker/.env && sudo sed -i "\$a\MYSQL_ROLE=single" /onekeeper/idaas-docker/.env ||  sudo echo "MYSQL_ROLE=single" | sudo tee /onekeeper/idaas-docker/.env >/dev/null 2>&1
+fi
+}
+
+setenvfile () {
+    env_file="/onekeeper/idaas-docker/.env_file"
+
+    if [ ! -f $env_file ]; then
+        touch $env_file
+        addenvfile
+    else
+        addenvfile
+    fi
+}
+
+addenvfile () {
 ip=`ip addr |grep inet|grep -v 127.0.0.1|grep -v inet6 | awk '{print $2}' |awk -F"/" '{print $1}'|head -n 1`
 addr="https://"$ip":18020"
 sudo chmod 664 /onekeeper/idaas-docker/.env_file
