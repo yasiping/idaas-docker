@@ -4,6 +4,7 @@ echo "########################################################"
 
 
 #/wait-for-it.sh osm-db:3306 -t 0
+/wait-for-it.sh idaas-db:3306 -t 0
 
 cd /capaa
 bash ./install.sh
