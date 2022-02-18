@@ -22,7 +22,7 @@ bash ./init.sh
 #cd /capaa/mc-center/bin/
 #bash ./startup_mc_center.sh
 
-cp /data/mc-center/conf/newAppIndexUrlOrder.txt  /data/mc-center/conf/appIndexUrlOrder.txt
+#cp /data/mc-center/conf/newAppIndexUrlOrder.txt  /data/mc-center/conf/appIndexUrlOrder.txt
 
 echo "** Executing supervisord"
 exec /usr/bin/supervisord -c /etc/supervisord.conf -n
