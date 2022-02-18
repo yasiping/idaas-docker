@@ -163,10 +163,10 @@ fi
 }
 
 setenv () {
-    env_1 ="/onekeeper/idaas-docker/.env"
+    compose_env="/onekeeper/idaas-docker/.env"
 
-    if [ ! -f env_1 ]; then
-        touch env_1
+    if [ ! -f $compose_env ]; then
+        touch $compose_env
         addenv
     else
         addenv
