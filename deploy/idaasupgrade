@@ -152,8 +152,7 @@ fundeplic () {
 if [ -f "/backup/upgradebak/idaas/.env" ];then
 sudo cp /backup/upgradebak/idaas/.env /onekeeper/idaas-docker/.env >/dev/null 2>&1
 sudo sed -i "s/IDAAS_VERSION=.*/IDAAS_VERSION=${ver}/g" /onekeeper/idaas-docker/.env  >/dev/null 2>&1
-else
-    setenv
+setenv
 
 fi
 if [ -f "/backup/upgradebak/idaas/.env_file" ];then
