@@ -40,7 +40,7 @@ services:
   image: idaas:${IDAAS_VERSION}
   build: ./APP/idaas
   volumes:
-    - ./idaas_env/data/mc-center/conf/appIndexUrlOrder.txt:/data/mc-center/conf/appIndexUrlOrder.txt:ro
+    - ./idaas_env/data/mc-center/conf/appIndexUrlOrder.txt:/data/mc-center/conf/newAppIndexUrlOrder.txt:ro
   ports:
     - "18020:18020"
   depends_on:
