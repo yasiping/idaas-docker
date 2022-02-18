@@ -1,0 +1,73 @@
+#server:
+#  # 请勿随意修改端口值，升级时确保端口值和初始安装时保持一致，建议端口值在第一次安装时确定好，并在后续操作中不要修改端口，否则将会导致兼容性问题
+#  # 可能出现的问题：
+#  # 1.已下载安全客户端无法使用，重新下载安装即可
+#  # 2.统一身份首页无法进入，在application.yml配置正确的访问路径
+#  port: 18020
+#  # 支持https部署,钉钉,企业微信回调地址必须为https服务
+#  ssl:
+#    enabled: true
+#    key-store: classpath:javaboy.p12
+#    key-alias: tomcathttps
+#    key-store-password: 111111
+#
+#spring:
+#  # MySQL数据源配置
+#  datasource:
+#    # IPv4 连接地址
+#    url: jdbc:mysql://idaas-db:3306/mc_center?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+#    # IPv6 连接地址
+#    #url: jdbc:mysql://[::1]:3306/mc_center?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+#    username: dmcp
+#    password: Dmcp321!
+#
+##swagger开关
+#swagger.enable: true
+#
+##log 日志记录
+#logging:
+#  level:
+#    com.mchz: info
+#    org.springframework: info
+#
+##项目访问路径配置
+#uc-center:
+#  accessPath: https://172.15.236.3:18020
+#
+#builtinApp: data-notice,data-drcc
+
+
+server:
+  address: 0.0.0.0
+  port: 18020
+  ssl:
+    enabled: true
+    key-store: classpath:javaboy.p12
+    key-alias: tomcathttps
+    key-store-password: 111111
+
+spring:
+  datasource:
+    url: jdbc:mysql://idaas-db:3306/mc_center?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+
+    #url: jdbc:mysql://[::1]:3306/mc_center?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+    username: dmcp
+    password: Dmcp321!
+
+swagger.enable: false
+
+logging:
+  level:
+    com.mchz: info
+    org.springframework: info
+
+
+uc-center:
+  accessPath: https://172.15.236.3:18020
+  interfaceLogSwitch: false
+  dataPermissionSwitch: false
+#builtinApp: data-support,data-manage,data-osm,data-process
+
+appTempToken: cdd171a6-779d-445c-a757-5bbc0e712e62
+
+builtinApp: data-notice,data-drcc
