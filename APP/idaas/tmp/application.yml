@@ -63,3 +63,30 @@ heartbeat:
 
 #身份模块开关
 identity.enable: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#  server:
+#    port: 10111
+#    servlet:
+#      context-path: /
+#    ssl:
+#      enabled: false
+  endpoint:
+    env:
+      enabled: false
+    conditions:
+      enabled: false
+    mappings:
+      enabled: false
+    health:
+      show-details: always
+    shutdown:
+      enabled: false
+    beans:
+      enabled: false
+    httptrace:
+      enabled: false
