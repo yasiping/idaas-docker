@@ -166,7 +166,7 @@ setenv () {
     compose_env="/onekeeper/idaas-docker/.env"
 
     if [ ! -f $compose_env ]; then
-        touch $compose_env
+        sudo touch $compose_env
         addenv
     else
         addenv
@@ -184,7 +184,7 @@ setenvfile () {
     env_file="/onekeeper/idaas-docker/.env_file"
 
     if [ ! -f $env_file ]; then
-        touch $env_file
+        sudo touch $env_file
         addenvfile
     else
         addenvfile
